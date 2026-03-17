@@ -7,10 +7,12 @@ on:
         description: "The name of the docker image to pull."
         required: true
         type: string
+        default: "pytorch/pytorch"
       docker_tag:
         description: "The tag of the docker image to pull."
         required: true
         type: string
+        default: "latest"
 
 env:
   DOCKER_HOST: ${{ vars.DOCKER_HOST }}
@@ -36,5 +38,6 @@ jobs:
 
       - name: Pull the docker image
         run: |
-          echo "${DOCKER_PASS}" | docker login ${DOCKER_HOST} --username "${DOCKER_USER}" --password-stdin
-          docker pull ${DOCKER_HOST}/${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG}
+          #echo "${DOCKER_PASS}" | docker login ${DOCKER_HOST} --username "${DOCKER_USER}" --password-stdin
+          #docker pull ${DOCKER_HOST}/${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG}
+          docker pull ${DOCKER_IMAGE}:${DOCKER_TAG}
