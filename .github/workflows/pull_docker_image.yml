@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Login to docker repository
-        uses: docker/login-action@v4
+        uses: docker/login-action@v3
         with:
           registry: ${{ env.DOCKER_HOST }}
           username: ${{ env.DOCKER_USER }}
