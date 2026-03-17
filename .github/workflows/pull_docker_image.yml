@@ -1,5 +1,13 @@
 name: Pull Docker Image
 
+# This workflow can be called with a ReSTful API call.
+# Per: https://docs.github.com/en/rest/actions/workflows#create-a-workflow-dispatch-event
+# Example using CuRL:
+#   curl -L -X POST -H "Accept: application/vnd.github+json" \
+#   -H "Authorization: Bearer ${PAT_TOKEN}" -H "X-GitHub-Api-Version: 2026-03-10" \
+#   https://api.github.com/repos/${GH_ORG}/${GH_REPO}/actions/workflows/${GH_WORKFLOW}/dispatches \
+#   -d '{ "ref": "main", "inputs": { "docker_image": "<IMAGE>", "docker_tag": "<TAG>" } }'
+
 on:
   workflow_dispatch:
     inputs:
@@ -7,12 +15,10 @@ on:
         description: "The name of the docker image to pull."
         required: true
         type: string
-        default: "pytorch/pytorch"
       docker_tag:
         description: "The tag of the docker image to pull."
         required: true
         type: string
-        default: "latest"
 
 env:
   # NOTE: Can't override DOCKER_HOST env as it breaks the docker CLI
