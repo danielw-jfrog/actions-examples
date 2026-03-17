@@ -25,14 +25,16 @@ jobs:
   pull-docker-image:
     runs-on: ubuntu-latest
     steps:
-      - name: Login to docker repository
-        uses: docker/login-action@v4
-        with:
-          ecr: false
-          registry: ${{ env.DOCKER_HOST }}
-          username: ${{ env.DOCKER_USER }}
-          password: ${{ env.DOCKER_PASS }}
+      # NOTE: docker/login-action doesn't seem to work with private registries.
+      #- name: Login to docker repository
+      #  uses: docker/login-action@v4
+      #  with:
+      #    ecr: false
+      #    registry: ${{ env.DOCKER_HOST }}
+      #    username: ${{ env.DOCKER_USER }}
+      #    password: ${{ env.DOCKER_PASS }}
 
       - name: Pull the docker image
         run: |
+          echo "${DOCKER_PASS}" | docker login ${DOCKER_HOST} --username "${DOCKER_USER}" --password-stdin
           docker pull ${DOCKER_HOST}/${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG}
