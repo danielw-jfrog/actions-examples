@@ -15,29 +15,27 @@ on:
         default: "latest"
 
 env:
-  DOCKER_HOST: ${{ vars.DOCKER_HOST }}
-  DOCKER_REPO: ${{ vars.DOCKER_REPO }}
-  DOCKER_USER: ${{ secrets.DOCKER_USER }}
-  DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
-  DOCKER_IMAGE: ${{ github.event.inputs.docker_image }}
-  DOCKER_TAG: ${{ github.event.inputs.docker_tag }}
+  # NOTE: Can't override DOCKER_HOST env as it breaks the docker CLI
+  DKR_HOST: ${{ vars.DOCKER_HOST }}
+  DKR_REPO: ${{ vars.DOCKER_REPO }}
+  DKR_USER: ${{ secrets.DOCKER_USER }}
+  DKR_PASS: ${{ secrets.DOCKER_PASS }}
+  DKR_IMAGE: ${{ github.event.inputs.docker_image }}
+  DKR_TAG: ${{ github.event.inputs.docker_tag }}
 
 
 jobs:
   pull-docker-image:
     runs-on: ubuntu-latest
     steps:
-      # NOTE: docker/login-action doesn't seem to work with private registries.
-      #- name: Login to docker repository
-      #  uses: docker/login-action@v4
-      #  with:
-      #    ecr: false
-      #    registry: ${{ env.DOCKER_HOST }}
-      #    username: ${{ env.DOCKER_USER }}
-      #    password: ${{ env.DOCKER_PASS }}
+      - name: Login to docker repository
+        uses: docker/login-action@v4
+        with:
+          ecr: false
+          registry: ${{ env.DKR_HOST }}
+          username: ${{ env.DKR_USER }}
+          password: ${{ env.DKR_PASS }}
 
       - name: Pull the docker image
         run: |
-          #echo "${DOCKER_PASS}" | docker login ${DOCKER_HOST} --username "${DOCKER_USER}" --password-stdin
-          #docker pull ${DOCKER_HOST}/${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG}
-          docker pull ${DOCKER_IMAGE}:${DOCKER_TAG}
+          docker pull ${DKR_HOST}/${DKR_REPO}/${DKR_IMAGE}:${DKR_TAG}
